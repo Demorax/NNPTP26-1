@@ -2,6 +2,9 @@
 
 namespace NNPTPZ1.Mathematics
 {
+    /// <summary>
+    /// Complex number with basic arithmetic operations.
+    /// </summary>
     public class ComplexNumber
     {
         /// <summary>

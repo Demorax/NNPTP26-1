@@ -14,9 +14,8 @@ namespace NNPTPZ1.Mathematics
             Coefficients.Add(coefficient);
 
         /// <summary>
-        /// Derives this polynomial and creates new one
+        /// Returns the derivative of this polynomial as a new polynomial.
         /// </summary>
-        /// <returns>Derivated polynomial</returns>
         public Polynomial Derive()
         {
             Polynomial derivative = new Polynomial();
@@ -26,16 +25,6 @@ namespace NNPTPZ1.Mathematics
             }
 
             return derivative;
-        }
-
-        /// <summary>
-        /// Evaluates polynomial at given point
-        /// </summary>
-        /// <param name="x">point of evaluation</param>
-        /// <returns>value of polynomial at x</returns>
-        public ComplexNumber Evaluate(double x)
-        {
-            return Evaluate(new ComplexNumber() { Real = x, Imaginary = 0 });
         }
 
         /// <summary>

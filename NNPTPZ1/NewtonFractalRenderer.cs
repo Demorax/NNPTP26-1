@@ -11,10 +11,11 @@ namespace NNPTPZ1
     /// </summary>
     public class NewtonFractalRenderer
     {
-        private const int ConvergedIterations = 30;
+        private const int RequiredConvergedIterations = 30;
         private const int MaxIterations = 1000;
-        private const double ConvergenceThreshold = 0.5;
-        private const double RootTolerance = 0.01;
+        // both limits are compared with the squared distance
+        private const double ConvergedStepSquared = 0.5;
+        private const double RootToleranceSquared = 0.01;
         private const double ZeroReplacement = 0.0001;
         private const int DarkeningPerIteration = 2;
 
@@ -77,13 +78,13 @@ namespace NNPTPZ1
         {
             int iterations = 0;
             int convergedIterations = 0;
-            while (convergedIterations < ConvergedIterations && iterations < MaxIterations)
+            while (convergedIterations < RequiredConvergedIterations && iterations < MaxIterations)
             {
                 ComplexNumber step = polynomial.Evaluate(point).Divide(derivative.Evaluate(point));
                 point = point.Subtract(step);
 
                 // big steps do not count, the iteration has not converged yet
-                bool isBigStep = Math.Pow(step.Real, 2) + Math.Pow(step.Imaginary, 2) >= ConvergenceThreshold;
+                bool isBigStep = Math.Pow(step.Real, 2) + Math.Pow(step.Imaginary, 2) >= ConvergedStepSquared;
                 if (!isBigStep)
                 {
                     convergedIterations++;
@@ -108,7 +109,7 @@ namespace NNPTPZ1
 
         private static bool IsSameRoot(ComplexNumber root, ComplexNumber point)
         {
-            return Math.Pow(point.Real - root.Real, 2) + Math.Pow(point.Imaginary - root.Imaginary, 2) <= RootTolerance;
+            return Math.Pow(point.Real - root.Real, 2) + Math.Pow(point.Imaginary - root.Imaginary, 2) <= RootToleranceSquared;
         }
 
         private static Color GetColor(int rootIndex, int iterations)
