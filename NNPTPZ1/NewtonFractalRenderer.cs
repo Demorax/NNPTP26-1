@@ -12,6 +12,7 @@ namespace NNPTPZ1
     public class NewtonFractalRenderer
     {
         private const int ConvergedIterations = 30;
+        private const int MaxIterations = 1000;
         private const double ConvergenceThreshold = 0.5;
         private const double RootTolerance = 0.01;
         private const double ZeroReplacement = 0.0001;
@@ -75,15 +76,17 @@ namespace NNPTPZ1
         private int SolveByNewtonMethod(ref ComplexNumber point)
         {
             int iterations = 0;
-            for (int i = 0; i < ConvergedIterations; i++)
+            int convergedIterations = 0;
+            while (convergedIterations < ConvergedIterations && iterations < MaxIterations)
             {
                 ComplexNumber step = polynomial.Evaluate(point).Divide(derivative.Evaluate(point));
                 point = point.Subtract(step);
 
                 // big steps do not count, the iteration has not converged yet
-                if (Math.Pow(step.Real, 2) + Math.Pow(step.Imaginary, 2) >= ConvergenceThreshold)
+                bool isBigStep = Math.Pow(step.Real, 2) + Math.Pow(step.Imaginary, 2) >= ConvergenceThreshold;
+                if (!isBigStep)
                 {
-                    i--;
+                    convergedIterations++;
                 }
                 iterations++;
             }
