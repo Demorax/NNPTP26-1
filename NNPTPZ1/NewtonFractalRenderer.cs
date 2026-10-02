@@ -36,15 +36,15 @@ namespace NNPTPZ1
         {
             Bitmap bitmap = new Bitmap(settings.Width, settings.Height);
 
-            for (int i = 0; i < settings.Width; i++)
+            for (int y = 0; y < settings.Height; y++)
             {
-                for (int j = 0; j < settings.Height; j++)
+                for (int x = 0; x < settings.Width; x++)
                 {
-                    ComplexNumber point = ToComplexPlane(settings, j, i);
+                    ComplexNumber point = ToComplexPlane(settings, x, y);
                     int iterations = SolveByNewtonMethod(ref point);
                     int rootIndex = GetRootIndex(point);
 
-                    bitmap.SetPixel(j, i, GetColor(rootIndex, iterations));
+                    bitmap.SetPixel(x, y, GetColor(rootIndex, iterations));
                 }
             }
 
