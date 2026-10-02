@@ -10,9 +10,19 @@ namespace NNPTPZ1
     /// </summary>
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            FractalSettings settings = FractalSettings.FromArguments(args);
+            FractalSettings settings;
+            try
+            {
+                settings = FractalSettings.FromArguments(args);
+            }
+            catch (ArgumentException e)
+            {
+                Console.Error.WriteLine(e.Message);
+                Console.Error.WriteLine(FractalSettings.Usage);
+                return 1;
+            }
 
             // x^3 + 1
             Polynomial polynomial = new Polynomial();
@@ -27,8 +37,10 @@ namespace NNPTPZ1
             NewtonFractalRenderer renderer = new NewtonFractalRenderer(polynomial);
             using (Bitmap bitmap = renderer.Render(settings))
             {
-                bitmap.Save(settings.OutputPath ?? "../../../out.png");
+                bitmap.Save(settings.OutputPath);
             }
+
+            return 0;
         }
     }
 }
