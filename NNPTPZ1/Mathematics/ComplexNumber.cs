@@ -4,81 +4,84 @@ namespace NNPTPZ1.Mathematics
 {
     public class ComplexNumber
     {
+        /// <summary>
+        /// Returns new instance, so that the shared value cannot be modified through its setters.
+        /// </summary>
+        public static ComplexNumber Zero => new ComplexNumber();
+
         public double Real { get; set; }
         public float Imaginary { get; set; }
 
-        public override bool Equals(object obj)
+        public ComplexNumber Add(ComplexNumber other)
         {
-            if (obj is ComplexNumber)
-            {
-                ComplexNumber x = obj as ComplexNumber;
-                return x.Real == Real && x.Imaginary == Imaginary;
-            }
-            return base.Equals(obj);
-        }
-
-        public readonly static ComplexNumber Zero = new ComplexNumber()
-        {
-            Real = 0,
-            Imaginary = 0
-        };
-
-        public ComplexNumber Multiply(ComplexNumber b)
-        {
-            ComplexNumber a = this;
-            // aRe*bRe + aRe*bIm*i + aIm*bRe*i + aIm*bIm*i*i
             return new ComplexNumber()
             {
-                Real = a.Real * b.Real - a.Imaginary * b.Imaginary,
-                Imaginary = (float)(a.Real * b.Imaginary + a.Imaginary * b.Real)
+                Real = Real + other.Real,
+                Imaginary = Imaginary + other.Imaginary
             };
         }
+
+        public ComplexNumber Subtract(ComplexNumber other)
+        {
+            return new ComplexNumber()
+            {
+                Real = Real - other.Real,
+                Imaginary = Imaginary - other.Imaginary
+            };
+        }
+
+        public ComplexNumber Multiply(ComplexNumber other)
+        {
+            // (a + bi)(c + di) = (ac - bd) + (ad + bc)i
+            return new ComplexNumber()
+            {
+                Real = Real * other.Real - Imaginary * other.Imaginary,
+                Imaginary = (float)(Real * other.Imaginary + Imaginary * other.Real)
+            };
+        }
+
+        public ComplexNumber Divide(ComplexNumber other)
+        {
+            // multiply numerator and denominator by conjugate of denominator:
+            // (a + bi) / (c + di) = (a + bi)(c - di) / (c^2 + d^2)
+            ComplexNumber numerator = Multiply(new ComplexNumber() { Real = other.Real, Imaginary = -other.Imaginary });
+            double denominator = other.Real * other.Real + other.Imaginary * other.Imaginary;
+
+            return new ComplexNumber()
+            {
+                Real = numerator.Real / denominator,
+                Imaginary = (float)(numerator.Imaginary / denominator)
+            };
+        }
+
         public double GetAbsoluteValue()
         {
-            return Math.Sqrt( Real * Real + Imaginary * Imaginary);
+            return Math.Sqrt(Real * Real + Imaginary * Imaginary);
         }
 
-        public ComplexNumber Add(ComplexNumber b)
-        {
-            ComplexNumber a = this;
-            return new ComplexNumber()
-            {
-                Real = a.Real + b.Real,
-                Imaginary = a.Imaginary + b.Imaginary
-            };
-        }
         public double GetAngleInRadians()
         {
             return Math.Atan(Imaginary / Real);
         }
-        public ComplexNumber Subtract(ComplexNumber b)
+
+        public override bool Equals(object obj)
         {
-            ComplexNumber a = this;
-            return new ComplexNumber()
+            return obj is ComplexNumber other
+                && other.Real == Real
+                && other.Imaginary == Imaginary;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
             {
-                Real = a.Real - b.Real,
-                Imaginary = a.Imaginary - b.Imaginary
-            };
+                return (Real.GetHashCode() * 397) ^ Imaginary.GetHashCode();
+            }
         }
 
         public override string ToString()
         {
             return $"({Real} + {Imaginary}i)";
-        }
-
-        internal ComplexNumber Divide(ComplexNumber b)
-        {
-            // (aRe + aIm*i) / (bRe + bIm*i)
-            // ((aRe + aIm*i) * (bRe - bIm*i)) / ((bRe + bIm*i) * (bRe - bIm*i))
-            //  bRe*bRe - bIm*bIm*i*i
-            var tmp = this.Multiply(new ComplexNumber() { Real = b.Real, Imaginary = -b.Imaginary });
-            var tmp2 = b.Real * b.Real + b.Imaginary * b.Imaginary;
-
-            return new ComplexNumber()
-            {
-                Real = tmp.Real / tmp2,
-                Imaginary = (float)(tmp.Imaginary / tmp2)
-            };
         }
     }
 }

@@ -35,10 +35,10 @@ namespace NNPTPZ1
 
             List<ComplexNumber> koreny = new List<ComplexNumber>();
             Polynomial p = new Polynomial();
-            p.Coefficients.Add(new ComplexNumber() { Real = 1 });
-            p.Coefficients.Add(ComplexNumber.Zero);
-            p.Coefficients.Add(ComplexNumber.Zero);
-            p.Coefficients.Add(new ComplexNumber() { Real = 1 });
+            p.Add(new ComplexNumber() { Real = 1 });
+            p.Add(ComplexNumber.Zero);
+            p.Add(ComplexNumber.Zero);
+            p.Add(new ComplexNumber() { Real = 1 });
             Polynomial pd = p.Derive();
 
             Console.WriteLine(p);
