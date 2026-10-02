@@ -1,18 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Drawing;
-using System.Drawing.Design;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Drawing.Printing;
-using System.Drawing.Text;
-using System.Drawing.Drawing2D;
-using System.Linq.Expressions;
-using System.Threading;
 using NNPTPZ1.Mathematics;
 
 namespace NNPTPZ1
@@ -36,7 +24,6 @@ namespace NNPTPZ1
                 doubleargs[i] = double.Parse(args[i + 2]);
             }
             string output = args[6];
-            // TODO: add parameters from args?
             Bitmap bmp = new Bitmap(intargs[0], intargs[1]);
             double xmin = doubleargs[0];
             double xmax = doubleargs[1];
@@ -47,14 +34,11 @@ namespace NNPTPZ1
             double ystep = (ymax - ymin) / intargs[1];
 
             List<Cplx> koreny = new List<Cplx>();
-            // TODO: poly should be parameterised?
             Poly p = new Poly();
             p.Coe.Add(new Cplx() { Re = 1 });
             p.Coe.Add(Cplx.Zero);
             p.Coe.Add(Cplx.Zero);
-            //p.Coe.Add(Cplx.Zero);
             p.Coe.Add(new Cplx() { Re = 1 });
-            Poly ptmp = p;
             Poly pd = p.Derive();
 
             Console.WriteLine(p);
@@ -65,9 +49,6 @@ namespace NNPTPZ1
                 Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Orange, Color.Fuchsia, Color.Gold, Color.Cyan, Color.Magenta
             };
 
-            var maxid = 0;
-
-            // TODO: cleanup!!!
             // for every pixel in image...
             for (int i = 0; i < intargs[0]; i++)
             {
@@ -88,8 +69,6 @@ namespace NNPTPZ1
                     if (ox.Imaginari == 0)
                         ox.Imaginari = 0.0001f;
 
-                    //Console.WriteLine(ox);
-
                     // find solution of equation using newton's iteration
                     float it = 0;
                     for (int q = 0; q< 30; q++)
@@ -97,15 +76,12 @@ namespace NNPTPZ1
                         var diff = p.Eval(ox).Divide(pd.Eval(ox));
                         ox = ox.Subtract(diff);
 
-                        //Console.WriteLine($"{q} {ox} -({diff})");
                         if (Math.Pow(diff.Re, 2) + Math.Pow(diff.Imaginari, 2) >= 0.5)
                         {
                             q--;
                         }
                         it++;
                     }
-
-                    //Console.ReadKey();
 
                     // find solution root number
                     var known = false;
@@ -122,34 +98,17 @@ namespace NNPTPZ1
                     {
                         koreny.Add(ox);
                         id = koreny.Count;
-                        maxid = id + 1; 
                     }
 
                     // colorize pixel according to root number
-                    //int vv = id;
-                    //int vv = id * 50 + (int)it*5;
                     var vv = clrs[id % clrs.Length];
                     vv = Color.FromArgb(vv.R, vv.G, vv.B);
                     vv = Color.FromArgb(Math.Min(Math.Max(0, vv.R-(int)it*2), 255), Math.Min(Math.Max(0, vv.G - (int)it*2), 255), Math.Min(Math.Max(0, vv.B - (int)it*2), 255));
-                    //vv = Math.Min(Math.Max(0, vv), 255);
                     bmp.SetPixel(j, i, vv);
-                    //bmp.SetPixel(j, i, Color.FromArgb(vv, vv, vv));
                 }
             }
 
-            // TODO: delete I suppose...
-            //for (int i = 0; i < 300; i++)
-            //{
-            //    for (int j = 0; j < 300; j++)
-            //    {
-            //        Color c = bmp.GetPixel(j, i);
-            //        int nv = (int)Math.Floor(c.R * (255.0 / maxid));
-            //        bmp.SetPixel(j, i, Color.FromArgb(nv, nv, nv));
-            //    }
-            //}
-
-                    bmp.Save(output ?? "../../../out.png");
-            //Console.ReadKey();
+            bmp.Save(output ?? "../../../out.png");
         }
     }
 
