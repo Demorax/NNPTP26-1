@@ -57,14 +57,14 @@ namespace NNPTPZ1
             ComplexNumber point = new ComplexNumber()
             {
                 Real = settings.XMin + x * settings.XStep,
-                Imaginary = (float)(settings.YMin + y * settings.YStep)
+                Imaginary = settings.YMin + y * settings.YStep
             };
 
             // Newton's iteration cannot start exactly at zero
             if (point.Real == 0)
                 point.Real = ZeroReplacement;
             if (point.Imaginary == 0)
-                point.Imaginary = (float)ZeroReplacement;
+                point.Imaginary = ZeroReplacement;
 
             return point;
         }
