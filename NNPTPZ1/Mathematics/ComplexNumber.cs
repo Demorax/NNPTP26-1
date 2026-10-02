@@ -61,7 +61,7 @@ namespace NNPTPZ1.Mathematics
 
         public double GetAngleInRadians()
         {
-            return Math.Atan(Imaginary / Real);
+            return Math.Atan2(Imaginary, Real);
         }
 
         public override bool Equals(object obj)
