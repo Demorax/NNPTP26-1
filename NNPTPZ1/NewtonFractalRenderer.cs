@@ -97,7 +97,7 @@ namespace NNPTPZ1
             if (rootIndex < 0)
             {
                 roots.Add(point);
-                rootIndex = roots.Count;
+                rootIndex = roots.Count - 1;
             }
 
             return rootIndex;
